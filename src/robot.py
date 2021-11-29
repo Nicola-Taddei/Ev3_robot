@@ -75,9 +75,7 @@ class Robot():
             self.move(self.normalize(self.SPEED - corr), self.normalize(self.SPEED + corr))
             sleep(1/self.f)
 
-    def catch(self):
-        self.move(100, 100)
-        self.stop()
+
 
 class Controller():
     def __init__(self, k_P, k_I, k_P_attach):
@@ -99,10 +97,34 @@ class Controller():
             P = -self.k_P_attach * self.sgn(error) * SPEED/30
             return P
 
+
+
 class Nipper():
     def __init__(self, motorMove, motorRotate, sensor):
         self.motorMove, self.motorRotate, self.sensor = MediumMotor(motorMove), MediumMotor(motorRotate), ColorSensor(sensor)
         self.sensor.mode = 'COL-COLOR'
+
+    def readColor(self):
+        return COLORS[self.sensor.value()]
+
+    def moveup(self):
+        self.motorRotate.run_forever(speed_sp=100)
+        sleep(3) 
+        self.motorRotate.stop(stop_action="hold")
+
+    def movedown(self):
+        self.motorRotate.run_forever(speed_sp=-100)
+        sleep(3)
+        self.motorRotate.stop(stop_action="hold")
+
+    def movein(self):
+        self.motorMove.run_forever(speed_sp=-55)
+        sleep(2.8)
+        self.motorMove.stop(stop_action="hold")
+
+    def moveoff(self):
+        self.motorRotate.run_forever(speed_sp=55)
+        sleep(2.8) #have to be tested (sleep added without testing. Possible code misinterpretation)
 
     def pull(self, colors):  # colors is a list of product colors which we are allowed to take
         pass
@@ -113,7 +135,16 @@ class Nipper():
         #codice
 
 
-if __name__=='main':
-    Robot('outB', 'outA', 'in1', 'in2', Controller(15, 5), 10, 200).drive()
+class AVG_polimi_lab(Robot):
+    def __init__(self, mSx, mDx, cSx, cDx, controller, f, SPEED, MIN_SPEED, LOW_SPEED, nipper):
+        super().__init__(self, mSx, mDx, cSx, cDx, controller, f, SPEED, MIN_SPEED, LOW_SPEED)
+        self.nipper = nipper
+    
+    def connect(self, color_list):  
+        pass 
+        #add code here
+
+if __name__== 'main':
+    AVG_polimi_lab('outB', 'outA', 'in1', 'in2', Controller(15, 5, 10), 15, 200, 100, 150, Nipper('out3', 'out4', 'in3'))
 
 
