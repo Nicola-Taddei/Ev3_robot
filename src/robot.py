@@ -12,6 +12,7 @@ class Robot():
         self.controller = controller   #allows to use a generic kind of controller, instead of forcing the use of Controller class
         self.f = f
         self.motorSx, self.motorDx, self.colorSx, self.colorDx = MediumMotor(mSx), MediumMotor(mDx), ColorSensor(cSx), ColorSensor(cDx)
+
         self.colorSx.mode, self.colorDx.mode = 'COL-COLOR', 'COL-COLOR'
 
     def move(self, speedSx, speedDx):
@@ -37,7 +38,7 @@ class Robot():
     def attach(self):
         e = 0
         color = ('red', 'red')
-        while color != ('yellow', 'yellow'):
+        while color != ('blue', 'blue'):
             if color == ('red', 'red'):
                 e = 0
             if color[0] not in ['black','red'] or color[1] == 'black':
@@ -47,10 +48,10 @@ class Robot():
             corr = self.controller.getCorrection(e, self.LOW_SPEED, 'ATTACH')
             self.move(self.normalize(self.LOW_SPEED - corr), self.normalize(self.LOW_SPEED + corr))
             sleep(1/self.f)
-            color = self.readColor()
-
-
-    def drive(self):
+            color = self.readColor() 
+        
+    
+   def drive(self):
         e = 0
         stop=0
         while True:
@@ -58,7 +59,9 @@ class Robot():
             if color == ('red', 'red') :
                 self.attach()
                 self.stop()
-                sleep(5)
+                break
+                #self.stop()
+                #sleep(5)
             if color == ('black', 'black'):
                 pass
             else:
@@ -74,7 +77,6 @@ class Robot():
             corr = self.controller.getCorrection(e, self.SPEED, 'STD')
             self.move(self.normalize(self.SPEED - corr), self.normalize(self.SPEED + corr))
             sleep(1/self.f)
-
 
 
 class Controller():
@@ -100,51 +102,83 @@ class Controller():
 
 
 class Nipper():
-    def __init__(self, motorMove, motorRotate, sensor):
-        self.motorMove, self.motorRotate, self.sensor = MediumMotor(motorMove), MediumMotor(motorRotate), ColorSensor(sensor)
-        self.sensor.mode = 'COL-COLOR'
 
-    def readColor(self):
-        return COLORS[self.sensor.value()]
+    def __init__(self, motorMove, motorRotate):
+        self.motorMove, self.motorRotate = MediumMotor(motorMove), MediumMotor(motorRotate)
 
-    def moveup(self):
-        self.motorRotate.run_forever(speed_sp=100)
-        sleep(3) 
-        self.motorRotate.stop(stop_action="hold")
+        self.ROTATION_TIME = 2.8
+        self.PULL_FORWARD_TIME = 2.8
+        self.PULL_BACKWARD_TIME = 2.8
+        #velocita' di rotazione e di uscita del carrello
+        self.ROTATION_SPEED = 90
+        self.PULL_SPEED = 55
+        self.POSITION_1 = 2.8
 
-    def movedown(self):
-        self.motorRotate.run_forever(speed_sp=-100)
-        sleep(3)
-        self.motorRotate.stop(stop_action="hold")
+    def stop(self):
+        self.motorMove.stop(stop_action = 'hold')
+        self.motorRotate.stop(stop_action = 'hold')
 
-    def movein(self):
-        self.motorMove.run_forever(speed_sp=-55)
-        sleep(2.8)
-        self.motorMove.stop(stop_action="hold")
-
-    def moveoff(self):
-        self.motorRotate.run_forever(speed_sp=55)
-        sleep(2.8) #have to be tested (sleep added without testing. Possible code misinterpretation)
-
-    def pull(self, colors):  # colors is a list of product colors which we are allowed to take
-        pass
-        #codice
+    def pull(self, colors= COLORS):  # colors is a list of product colors which we are allowed to take
+        print("Ciao")
+        self.motorRotate.run_forever(speed_sp = self.ROTATION_SPEED)
+        #sleep(self.POSITION_1)
+        #self.motorRotate.stop(stop_action = 'hold')
+        self.motorMove.run_forever(speed_sp = -self.PULL_SPEED)
+        sleep(self.PULL_FORWARD_TIME)
+        self.motorRotate.stop(stop_action='hold')
+        self.motorMove.stop(stop_action='hold')
+        self.motorRotate.run_forever(speed_sp = -self.ROTATION_SPEED)
+        sleep(self.ROTATION_TIME)
+        self.motorRotate.stop(stop_action='hold')
+        #attach to target
+        self.motorMove.run_forever(speed_sp= self.PULL_SPEED)
+        sleep(self.PULL_BACKWARD_TIME)
+        self.motorMove.stop(stop_action = 'hold')
 
     def push(self):
-        pass
-        #codice
+        self.motorMove.run_forever(speed_sp=-self.PULL_SPEED)
+        sleep(self.PULL_FORWARD_TIME)
+        self.motorMove.stop(stop_action='hold')
+        self.motorRotate.run_forever(speed_sp=self.ROTATION_SPEED)
+        sleep(self.POSITION_1)
+        self.motorMove.run_forever(speed_sp=self.PULL_SPEED)
+        self.motorRotate.run_forever(speed_sp=-self.ROTATION_SPEED)
+        sleep(self.PULL_BACKWARD_TIME)
+        self.motorRotate.stop(stop_action='hold')
+        self.motorMove.stop(stop_action='hold')
+
 
 
 class AVG_polimi_lab(Robot):
     def __init__(self, mSx, mDx, cSx, cDx, controller, f, SPEED, MIN_SPEED, LOW_SPEED, nipper):
-        super().__init__(self, mSx, mDx, cSx, cDx, controller, f, SPEED, MIN_SPEED, LOW_SPEED)
+        super().__init__(mSx, mDx, cSx, cDx, controller, f, SPEED, MIN_SPEED, LOW_SPEED)
         self.nipper = nipper
-    
-    def connect(self, color_list):  
-        pass 
-        #add code here
+
+    def connect(self, color_list=COLORS):
+        self.drive()
+        self.nipper.pull()
+        sleep(2)
+        self.move(-self.SPEED, -self.SPEED)
+        sleep(1)
+        self.stop()
+        self.move(self.SPEED, -self.SPEED)
+        sleep(1)
+        while self.readColor()[1] != 'black':
+            pass
+        self.stop()
+        self.drive()
+        self.nipper.push()
+
+
+while True:
+    avg = AVG_polimi_lab('outB', 'outA', 'in1', 'in2', Controller(10, 6, 10), 15, 300, 100, 150, Nipper('outC', 'outD'))
+    avg.connect()
+    sleep(10)
+
 
 if __name__== 'main':
-    AVG_polimi_lab('outB', 'outA', 'in1', 'in2', Controller(15, 5, 10), 15, 200, 100, 150, Nipper('out3', 'out4', 'in3'))
+    print("Arrivato")
+    AVG_polimi_lab('outB', 'outA', 'in1', 'in2', Controller(15, 5, 10), 15, 200, 100, 150, Nipper('out3', 'out4', 'in3')).nipper.pull()
+
 
 
