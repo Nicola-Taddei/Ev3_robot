@@ -109,10 +109,11 @@ class Nipper():
         self.ROTATION_TIME = 2.8
         self.PULL_FORWARD_TIME = 2.8
         self.PULL_BACKWARD_TIME = 2.8
+        self.POSITION_1 = 2.8
         #velocita' di rotazione e di uscita del carrello
         self.ROTATION_SPEED = 90
         self.PULL_SPEED = 55
-        self.POSITION_1 = 2.8
+        
 
     def stop(self):
         self.motorMove.stop(stop_action = 'hold')
