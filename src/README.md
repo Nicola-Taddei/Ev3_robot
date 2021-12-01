@@ -41,12 +41,13 @@ The parameters to pass to the class are respectively:
 - LOW_SPEED
 
  ## Function
-
 The <code>move</code> function simply rotates the motors at the speed passed as a parameter. This function will be used whenever you want to change the speed or direction of the robot.
 
 <code>stop</code> instead it stops both motors.
 
-<code>readColor</code> return a string whit the color read by the sensor.
+The <code>readColor</code> function returns a an string list whit the colors read by the sensors.
+
+The system can be described as a set of states, the first state is the one in which the robot is at any point between the two production lines and is managed by the  <code>move</code> function which allows you to reach a loading or unloading point.
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
