@@ -119,7 +119,7 @@ class Nipper():
         self.motorMove.stop(stop_action = 'hold')
         self.motorRotate.stop(stop_action = 'hold')
 
-    def pull(self, colors= COLORS):  # colors is a list of product colors which we are allowed to take
+    def pull(self):
         self.motorRotate.run_forever(speed_sp = self.ROTATION_SPEED)
         #sleep(self.POSITION_1)
         #self.motorRotate.stop(stop_action = 'hold')
