@@ -1,4 +1,15 @@
-# Source code
+# Table of Contents
+  * [Introduction](#introduction)
+  * [Class Robot](#class-robot)
+    * [Costants](#costants)
+    * [Variables and parameters](#variables-and-parameters)
+    * [Functions](#function)
+  * [Class Nipper](#class-nipper)
+    * [Costants](#costants)
+    * [Functions](#function)
+  
+
+# Introduction
 The entire code, programmed following an OOP paradigm, is based on the class <code>Robot</code>, extended here by <code>AVG_polimi_lab</code> class, which implements, further than normal <code>Robot</code> functionalities, also a nipper function, through a <code>Nipper</code> class attribute object.
 
 A simple demonstration can be run following the assembly instructions in the <code>docs</code> directory and running the <code>robot</code> module as a script: <br>
@@ -7,16 +18,28 @@ A simple demonstration can be run following the assembly instructions in the <co
 
 # Class Robot
 
-This class contains all the function for the robot movement and the position to pick up the product. The operating principle consists in using two suitably separated sensors which serve to keep the robot as close to the line as possible. If one of the sensors detects the black color then it automatically corrects the trajectory by bending on the opposite side. 
+This class contains all the function for the robot movement and the position to pick up the product. The operating principle consists in using two suitably separated sensors which serve to keep the robot as close to the line as possible. If one of the sensors detects the black color then it automatically corrects the trajectory by bending on the opposite side. The two motors control the due tracks.
 
 ## Costants
 
+- <code>MIN_SPEED</code> is the modulus of the minimum speed it can reach
+- <code>SPEED</code> is the standard speed of the robot when it goes perfectly straight
+- <code>LOW_SPEED</code> is the speed when approaching the unloading platform
+ ## Variables and Parameters
+The parameters to pass to the class are respectively:
+
+<code>def __init__(self, mSx, mDx, cSx, cDx, controller, f, SPEED, MIN_SPEED, LOW_SPEED)</code>
+
+- port where the left motor is connected
+- port where the right motor is connected
+- port where the left color sensor is connected
+- port where the right sensor is connected
+- 
 
 
-
-
-
-
+ 
+ ## Function
+ 
 # Class Nipper
 In this class you have all the function for controll the pull and the push of a product on your production line.
 We decided to separate the <code>nipper</code> class from the <code>robot</code> class because in this way it is possible to use the properties separately in case you want to use the two parts of the robot in other projects.
