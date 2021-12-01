@@ -46,7 +46,7 @@ The <code>move</code> function simply rotates the motors at the speed passed as 
 
 <code>stop</code> instead it stops both motors.
 
-<code>readColor</code> return a srting whit the color read by the sensor.
+<code>readColor</code> return a string whit the color read by the sensor.
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
