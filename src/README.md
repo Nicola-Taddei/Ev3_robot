@@ -9,8 +9,9 @@ A simple demonstration can be run following the assembly instructions in the <co
 
 This class contains all the function for the robot movement and the position to pick up the product. The operating principle consists in using two suitably separated sensors which serve to keep the robot as close to the line as possible. If one of the sensors detects the black color then it automatically corrects the trajectory by bending on the opposite side. 
 
-##Costants
-S
+## Costants
+
+
 
 
 
