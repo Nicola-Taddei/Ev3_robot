@@ -15,7 +15,7 @@ The entire code, programmed following an OOP paradigm, is based on the class <co
 A simple demonstration can be run following the assembly instructions in the <code>docs</code> directory and running the <code>robot</code> module as a script: <br>
 <code>$ python3 robot.py</code>
 
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Class Robot
 
 This class contains all the function for the robot movement and the position to pick up the product. The operating principle consists in using two suitably separated sensors which serve to keep the robot as close to the line as possible. If one of the sensors detects the black color then it automatically corrects the trajectory by bending on the opposite side. The two motors control the due tracks.
@@ -34,12 +34,22 @@ The parameters to pass to the class are respectively:
 - port where the right motor is connected
 - port where the left color sensor is connected
 - port where the right sensor is connected
-- 
+- object that contains the parameters necessary for the correction of the trajectory
+- sampling rate of color sensors
+- SPEED 
+- MIN_SPEED
+- LOW_SPEED
 
-
- 
  ## Function
- 
+
+The <code>move</code> function simply rotates the motors at the speed passed as a parameter. This function will be used whenever you want to change the speed or direction of the robot.
+
+<code>stop</code> instead it stops both motors.
+
+code>readColor</code> return a srting whit the color read by the sensor.
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Class Nipper
 In this class you have all the function for controll the pull and the push of a product on your production line.
 We decided to separate the <code>nipper</code> class from the <code>robot</code> class because in this way it is possible to use the properties separately in case you want to use the two parts of the robot in other projects.
